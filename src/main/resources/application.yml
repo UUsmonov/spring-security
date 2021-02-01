@@ -1,0 +1,6 @@
+server:
+  port: 1991
+
+spring:
+  profiles:
+    active: dev
