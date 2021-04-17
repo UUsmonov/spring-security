@@ -58,4 +58,22 @@ public class User {
         this.roles = user.getRoles();
         this.createAt = user.getCreateAt();
     }
+
+    public User(String username,
+                String password,
+                String phoneNumber,
+                boolean enabled,
+                boolean accountNonExpired,
+                boolean credentialsNonExpired,
+                boolean accountNonLocked,
+                List<Role> roles) {
+        this.username = username;
+        this.password = password;
+        this.phoneNumber = phoneNumber;
+        this.enabled = enabled;
+        this.accountNonExpired = accountNonExpired;
+        this.credentialsNonExpired = credentialsNonExpired;
+        this.accountNonLocked = accountNonLocked;
+        this.roles = roles;
+    }
 }

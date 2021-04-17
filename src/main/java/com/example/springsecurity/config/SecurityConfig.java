@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.sql.DataSource;
 
@@ -21,6 +22,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public SecurityConfig(DataSource dataSource, UserService userService) {
         this.dataSource = dataSource;
         this.userService = userService;
+    }
+
+    @Bean
+    CustomTokenFilter customTokenFilter(){
+        return new CustomTokenFilter(userService);
     }
 
     @Override
@@ -52,10 +58,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
+                .addFilterBefore(customTokenFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests().antMatchers("/h2-console/**").permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .httpBasic();
+                .anyRequest().authenticated();
+//                .and()
+//                .httpBasic();
         http.headers().frameOptions().disable(); // for test purposes
     }
 }
