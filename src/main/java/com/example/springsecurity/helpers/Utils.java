@@ -16,16 +16,16 @@ public class Utils {
 //            String salt = "@D`!s*Ro-WAkD:mr@+3%T$";
             MessageDigest digest = MessageDigest.getInstance("SHA3-512");
             digest.update(salt.getBytes(StandardCharsets.UTF_8));
-            byte[] encodedhash = digest.digest(given.getBytes(StandardCharsets.UTF_8));
-            return bytesToHex(encodedhash);
+            byte[] encodedHash = digest.digest(given.getBytes(StandardCharsets.UTF_8));
+            return bytesToHex(encodedHash);
         } catch (NoSuchAlgorithmException e) {
             return given;
         }
     }
     private static String bytesToHex(byte[] hash) {
         StringBuilder hexString = new StringBuilder();
-        for (int i = 0; i < hash.length; i++) {
-            String hex = Integer.toHexString(0xff & hash[i]);
+        for (byte b : hash) {
+            String hex = Integer.toHexString(0xff & b);
             if (hex.length() == 1) hexString.append('0');
             hexString.append(hex);
         }

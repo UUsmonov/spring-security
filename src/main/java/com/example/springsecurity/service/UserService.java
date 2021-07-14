@@ -1,14 +1,12 @@
 package com.example.springsecurity.service;
 
 import com.example.springsecurity.helpers.Utils;
-import com.example.springsecurity.model.AuthUserDetail;
-import com.example.springsecurity.model.Role;
-import com.example.springsecurity.model.User;
-import com.example.springsecurity.model.UserToken;
+import com.example.springsecurity.model.*;
 import com.example.springsecurity.repository.PermissionRepo;
 import com.example.springsecurity.repository.RoleRepo;
 import com.example.springsecurity.repository.UserRepo;
 import com.example.springsecurity.repository.UserTokenRepo;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AccountStatusUserDetailsChecker;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -38,6 +36,17 @@ public class UserService implements UserDetailsService {
 
     @PostConstruct
     public void addTestUser(){ // for test purpose
+        Permission permission = new Permission(
+                1L,
+                "superAdmin"
+        );
+        permissionRepo.save(permission);
+        Role role = new Role(
+                1L,
+                "ROLE_admin",
+                List.of(permission)
+        );
+        role = roleRepo.save(role);
         User user = new User(
                 "test",
                 "test123",
@@ -46,9 +55,8 @@ public class UserService implements UserDetailsService {
                 true,
                 true,
                 true,
-                List.of()
+                List.of(role)
         );
-
         user = userRepo.save(user);
         UserToken userToken = new UserToken(
                 "4db33ccf-b05f-484c-84ea-cff80bd72fc8-06cc8d72-1b83-4821-9c5d-e980fcf5b13e",
@@ -78,5 +86,9 @@ public class UserService implements UserDetailsService {
         UserDetails userDetails = new AuthUserDetail(tokenOptional.get().getUser());
         new AccountStatusUserDetailsChecker().check(userDetails);
         return userDetails;
+    }
+
+    public ResponseEntity<?> getAll() {
+        return null;
     }
 }
